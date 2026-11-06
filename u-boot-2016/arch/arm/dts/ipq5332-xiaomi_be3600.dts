@@ -1,0 +1,260 @@
+/*
+ * Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free License Software Foundation.
+ *
+ * Xiaomi BE3600 (non-Pro, R3U150): IPQ5312 (IPQ5332 family), 256MB DDR3L-1866,
+ * 128MB GigaDevice GD5F1GM7REYIG SPI-NAND (QPIC), Realtek RTL8372? NO -
+ * Yutai YT9215S 5-port GbE switch @MDIO 0x1d (uplink port8 2500base-x,
+ * reset GPIO51 active-low), board id AP-MI04.1-C2.
+ *
+ * Hardware facts extracted byte-for-byte from stock firmware DTB
+ * (xiaomibe3600-1G/0804 UBI kernel volume, FIT fdt@1 "xiaomi_be3600",
+ * Linux 5.4.213, both variants share identical DTB).
+ */
+
+/dts-v1/;
+#include "ipq5332-soc.dtsi"
+/ {
+	host_name = "Xiaomi BE3600 (YT9215S switch)";
+	model = "ipq5332-xiaomi_be3600";
+	compatible = "qcom,ipq5332-ap-mi04.1-c2", "qcom,ipq5332";
+	machid = <0x8060004>;
+	config_name = "config@mi04.1-c2", "config-mi04.1-c2",
+		      "config@rdp478", "config-rdp478",
+		      "config@1", "config-1";
+
+	aliases {
+		uart2 = "/serial@78B0000";
+		console = "/serial@78AF000";
+		nand = "/nand-controller@79B0000";
+		usb0 = "/xhci@8a00000";
+		i2c0 = "/i2c@78B6000";
+		pci1 = "/pci@18000000";
+		pci2 = "/pci@10000000";
+	};
+
+	keys {
+		compatible = "gpio-keys";
+
+		wps {
+			gpio = <35>;
+			func = <0>;
+			drvstr = <GPIO_8MA>;
+			pull = <GPIO_PULL_UP>;
+			oe = <GPIO_OE_DISABLE>;
+			active_level = <GPIO_ACTIVE_LOW>;
+		};
+
+		reset {
+			gpio = <43>;
+			func = <0>;
+			drvstr = <GPIO_8MA>;
+			pull = <GPIO_PULL_UP>;
+			oe = <GPIO_OE_DISABLE>;
+			active_level = <GPIO_ACTIVE_LOW>;
+		};
+	};
+
+	/*
+	 * Stock LEDs are PWM-driven (pwm idx2 blue / idx1 orange), not plain
+	 * gpio; U-Boot has no pwm-led consumption, so no leds node here.
+	 */
+
+	serial@78AF000 {
+		status = "ok";
+		serial_gpio {
+			blsp0_uart_rx {
+				gpio = <18>;
+				func = <1>;
+				pull = <GPIO_PULL_UP>;
+				drvstr = <GPIO_8MA>;
+			};
+			blsp0_uart_tx {
+				gpio = <19>;
+				func = <1>;
+				pull = <GPIO_PULL_UP>;
+				drvstr = <GPIO_8MA>;
+			};
+		};
+	};
+
+	spi {
+		spi_gpio {
+			blsp0_spi_clk {
+				gpio = <14>;
+				func = <1>;
+				pull = <GPIO_PULL_DOWN>;
+				oe = <GPIO_OE_ENABLE>;
+				drvstr = <GPIO_8MA>;
+			};
+			blsp0_spi_mosi {
+				gpio = <15>;
+				func = <1>;
+				pull = <GPIO_PULL_DOWN>;
+				oe = <GPIO_OE_ENABLE>;
+				drvstr = <GPIO_8MA>;
+			};
+			blsp0_spi_miso {
+				gpio = <16>;
+				func = <1>;
+				pull = <GPIO_PULL_DOWN>;
+				drvstr = <GPIO_8MA>;
+			};
+			blsp0_spi_cs {
+				gpio = <17>;
+				func = <1>;
+				pull = <GPIO_PULL_UP>;
+				oe = <GPIO_OE_ENABLE>;
+				drvstr = <GPIO_8MA>;
+			};
+		};
+	};
+
+	i2c@78B6000 {
+		i2c_gpio {
+			gpio1 {
+				gpio = <29>;
+				func = <3>;
+				pull = <GPIO_PULL_UP>;
+				drvstr = <GPIO_8MA>;
+				oe = <GPIO_OE_ENABLE>;
+			};
+
+			gpio2 {
+				gpio = <30>;
+				func = <3>;
+				pull = <GPIO_PULL_UP>;
+				drvstr = <GPIO_8MA>;
+				oe = <GPIO_OE_ENABLE>;
+			};
+		};
+	};
+
+	nand: nand-controller@79B0000 {
+		nand_gpio {
+			qspi_dat3 {
+				gpio = <8>;
+				func = <2>;
+				pull = <GPIO_PULL_DOWN>;
+				drvstr = <GPIO_8MA>;
+			};
+			qspi_dat2 {
+				gpio = <9>;
+				func = <2>;
+				pull = <GPIO_PULL_DOWN>;
+				drvstr = <GPIO_8MA>;
+			};
+			qspi_dat1 {
+				gpio = <10>;
+				func = <2>;
+				pull = <GPIO_PULL_DOWN>;
+				drvstr = <GPIO_8MA>;
+			};
+			qspi_dat0 {
+				gpio = <11>;
+				func = <2>;
+				pull = <GPIO_PULL_DOWN>;
+				drvstr = <GPIO_8MA>;
+			};
+			qspi_cs_n {
+				gpio = <12>;
+				func = <2>;
+				pull = <GPIO_PULL_UP>;
+				drvstr = <GPIO_8MA>;
+			};
+			qspi_clk {
+				gpio = <13>;
+				func = <2>;
+				pull = <GPIO_PULL_DOWN>;
+				drvstr = <GPIO_8MA>;
+			};
+		};
+	};
+
+	pci1: pci@18000000 {
+		status = "ok";
+		perst_gpio = <47>;
+		lane = <1>;
+		pci_gpio {
+			pci_rst {
+				gpio = <47>;
+				pull = <GPIO_PULL_UP>;
+				oe = <GPIO_OE_ENABLE>;
+				drvstr = <GPIO_8MA>;
+			};
+		};
+	};
+
+	pci2: pci@10000000 {
+		status = "ok";
+		perst_gpio = <44>;
+		lane = <1>;
+		pci_gpio {
+			pci_rst {
+				gpio = <44>;
+				pull = <GPIO_PULL_UP>;
+				oe = <GPIO_OE_ENABLE>;
+			};
+		};
+	};
+
+	ess-switch {
+		/*
+		 * Stock DTB: switch_mac_mode/switch_mac_mode1 = 0x0c
+		 * (= PORT_WRAPPER_SGMII_PLUS on both uniphy ports),
+		 * YT9215S uplink port8 = 2500base-x fixed-link.
+		 * Reset line GPIO51 (active-low, assert 10ms/deassert 50ms
+		 * per stock driver) is driven by the generic
+		 * qca808x_phy_reset_init()/..._done() path.
+		 */
+		switch_mac_mode0 = <PORT_WRAPPER_SGMII_PLUS>;
+		switch_mac_mode1 = <PORT_WRAPPER_SGMII_PLUS>;
+		qca808x_gpio = <51>;
+		qca808x_gpio_cnt = <1>;
+
+		mdio_gpio {
+			mdc1 {
+				gpio = <27>;
+				func = <1>;
+				pull = <GPIO_PULL_UP>;
+				drvstr = <GPIO_2MA>;
+			};
+			mdio {
+				gpio = <28>;
+				func = <1>;
+				pull = <GPIO_PULL_UP>;
+				drvstr = <GPIO_2MA>;
+			};
+		};
+
+		/*
+		 * YT9215S has no U-Boot MDIO driver (motorcomm,yt9215-smi is
+		 * Linux-side only). It is a strap-configured transparent L2
+		 * switch: no MDIO programming needed before traffic flows.
+		 * Declared as SFP_PHY_TYPE so link/speed come from PPE
+		 * PORT_PHY_STATUS (phy_status_get_from_ppe) with the wrapper
+		 * mode fixed at SGMII_PLUS => 2500Mbps, bypassing per-phy ops.
+		 *
+		 * ASSUMPTION (verify on hardware): YT9215S port8 uplink hangs
+		 * on uniphy0 (stock dp2: qcom,id=1, mdio-bus, phy-mdio-addr=0).
+		 * If eth0 stays down, swap port@0/port@1 blocks.
+		 */
+		port_phyinfo {
+			port@0 {
+				phy_address = <0x1d>;
+				phy_type = <SFP_PHY_TYPE>;
+				uniphy_id = <0>;
+				uniphy_mode = <PORT_WRAPPER_SGMII_PLUS>;
+			};
+			port@1 {
+				phy_address = <0xff>;
+				phy_type = <UNUSED_PHY_TYPE>;
+				uniphy_id = <1>;
+				uniphy_mode = <PORT_WRAPPER_SGMII_PLUS>;
+			};
+		};
+	};
+};

@@ -84,6 +84,14 @@ config TARGET_IPQ5332_JDCLOUD_RE_CS_08
     help
 	  Enable support for JDCloud ER2 board
 
+config TARGET_IPQ5332_XIAOMI_BE3600
+    bool "Xiaomi BE3600 (non-Pro, YT9215S switch) board support"
+	default n
+    help
+	  Enable support for Xiaomi BE3600 non-Pro (R3U150): IPQ5312/AP-MI04.1-C2,
+	  256MB DDR3L, GD5F1GM7REYIG 128MB SPI-NAND, Yutai YT9215S GbE switch
+	  at MDIO 0x1d with 2500base-x uplink (SGMII_PLUS, reset GPIO51).
+
 config TARGET_IPQ5332_XIAOMI_BE3600_PRO
     bool "Xiaomi BE3600 Pro (5/8 Ethernet ports) board support"
 	default n

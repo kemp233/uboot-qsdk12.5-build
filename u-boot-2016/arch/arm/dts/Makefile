@@ -164,6 +164,7 @@ dtb-$(CONFIG_TARGET_IPQ5018_JDCLOUD_AX3000)    += ipq5018-jdcloud_ax3000.dtb
 dtb-$(CONFIG_TARGET_IPQ5332_JDCLOUD_RE_CS_06)  += ipq5332-jdcloud_re-cs-06.dtb
 dtb-$(CONFIG_TARGET_IPQ5332_JDCLOUD_RE_CS_08)  += ipq5332-jdcloud_re-cs-08.dtb
 dtb-$(CONFIG_TARGET_IPQ5332_XIAOMI_BE3600_PRO) += ipq5332-xiaomi_be3600-pro.dtb
+dtb-$(CONFIG_TARGET_IPQ5332_XIAOMI_BE3600) += ipq5332-xiaomi_be3600.dtb
 dtb-$(CONFIG_TARGET_IPQ6018_ANYSAFE_E1)        += ipq6018-anysafe_e1.dtb
 dtb-$(CONFIG_TARGET_IPQ6018_CMIOT_AX18)        += ipq6018-cmiot_ax18.dtb
 dtb-$(CONFIG_TARGET_IPQ6018_GLINET_GL_AX1800)  += ipq6018-glinet_gl-ax1800.dtb
